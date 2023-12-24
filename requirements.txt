@@ -3,3 +3,5 @@ tgcrypto
 pyrogram~=2.0.59
 Flask
 gunicorn
+requests
+aiohttp
