@@ -1,4 +1,5 @@
 uvloop
 tgcrypto
 pyrogram~=2.0.59
-aiohttp
+flask==2.2.3
+gunicorn==20.1.0
