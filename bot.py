@@ -1,3 +1,6 @@
+from aiohttp import web
+from plugins import web_server
+
 import logging
 logging.basicConfig(
     level=logging.DEBUG,
