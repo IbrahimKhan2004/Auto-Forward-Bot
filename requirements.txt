@@ -3,3 +3,4 @@ tgcrypto
 pyrogram~=2.0.59
 flask
 gunicorn
+werkzeug
