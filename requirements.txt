@@ -1,7 +1,7 @@
 uvloop
 tgcrypto
 pyrogram~=2.0.59
-Flask
-gunicorn
+Flask==2.2.2
+gunicorn==20.1.0
 requests
 aiohttp
