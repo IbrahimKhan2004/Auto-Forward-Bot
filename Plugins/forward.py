@@ -17,6 +17,6 @@ async def forward(client, message):
 #           func = message.copy if False else message.forward
             await message.copy(int(to_channel))
             print("Forwarded a message from", from_channel, "to", to_channel)
-            await asyncio.sleep(1)
+            await asyncio.sleep(5)
    except Exception as e:
       logger.exception(e)
