@@ -15,10 +15,10 @@ async def forward(client, message):
             if message.chat.id == int(from_channel):
                 # MODIFICATION START: Check if the message is a video or sticker
                 if message.video or message.sticker: 
-                    await asyncio.sleep(3)  # Adding delay before forwarding
+                    await asyncio.sleep(15)  # Adding delay before forwarding
                     await message.copy(int(to_channel))
                     print("Forwarded a video or sticker from", from_channel, "to", to_channel) # MODIFICATION: Updated print statement for clarity
-                    await asyncio.sleep(1)
+                    await asyncio.sleep(15)
                 # MODIFICATION END
     except Exception as e:
         logger.exception(e)
