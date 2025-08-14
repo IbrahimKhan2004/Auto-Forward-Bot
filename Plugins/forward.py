@@ -20,5 +20,9 @@ async def forward(client, message):
                     print("Forwarded a video or sticker from", from_channel, "to", to_channel) # MODIFICATION: Updated print statement for clarity
                     await asyncio.sleep(25)
                 # MODIFICATION END
+                # ADDITION START
+                else:
+                    await asyncio.sleep(6) # Add delay for single video post
+                # ADDITION END
     except Exception as e:
         logger.exception(e)
