@@ -6,6 +6,8 @@ from pyrogram import filters
 from bot import channelforward
 from config import Config 
 
+lock = asyncio.Lock()
+
 @channelforward.on_message(filters.channel)
 async def forward(client, message):
     # Forwarding the messages to the channel
@@ -13,16 +15,14 @@ async def forward(client, message):
         for id in Config.CHANNEL:
             from_channel, to_channel = id.split(":")
             if message.chat.id == int(from_channel):
-                # MODIFICATION START: Check if the message is a video or sticker
                 if message.video or message.sticker: 
-                    await asyncio.sleep(40)  # Adding delay before forwarding
-                    await message.copy(int(to_channel))
-                    print("Forwarded a video or sticker from", from_channel, "to", to_channel) # MODIFICATION: Updated print statement for clarity
-                    await asyncio.sleep(60)
-                # MODIFICATION END
-                # ADDITION START
+                    async with lock:
+                        await asyncio.sleep(3)
+                        await message.copy(int(to_channel))
+                        print("Forwarded a video or sticker from", from_channel, "to", to_channel)
                 else:
-                    await asyncio.sleep(10) # Add delay for single video post
-                # ADDITION END
+                    await message.copy(int(to_channel))
+        await asyncio.sleep(10)
+        await asyncio.sleep(15)
     except Exception as e:
         logger.exception(e)
