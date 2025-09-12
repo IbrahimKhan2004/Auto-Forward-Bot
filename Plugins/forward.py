@@ -3,6 +3,7 @@ logger = logging.getLogger(__name__)
 
 import asyncio
 from pyrogram import filters
+from pyrogram.errors import FloodWait
 from bot import channelforward
 from config import Config
 
@@ -21,9 +22,14 @@ async def forward(client, message):
                         if len(message_queue) == 1:
                             while message_queue:
                                 msg, dest = message_queue[0]
-                                await msg.copy(int(dest))
-                                print("Forwarded in order from", from_channel, "to", dest)
-                                message_queue.pop(0)
-                                await asyncio.sleep(2)
+                                try:
+                                    await msg.copy(int(dest))
+                                    print("Forwarded in order from", from_channel, "to", dest)
+                                    message_queue.pop(0)
+                                except FloodWait as e:
+                                    await asyncio.sleep(e.value * 1.2)
+                                    continue
+                                except Exception:
+                                    pass
     except Exception as e:
         logger.exception(e)
