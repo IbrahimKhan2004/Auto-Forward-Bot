@@ -26,7 +26,7 @@ async def forward(client, message):
                                     await msg.copy(int(dest))
                                     print("Forwarded in order from", from_channel, "to", dest)
                                     message_queue.pop(0)
-                                    await asyncio.sleep(3)
+                                    await asyncio.sleep(6)
                                 except FloodWait as e:
                                     await asyncio.sleep(e.value * 1.2)
                                     continue
