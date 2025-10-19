@@ -3,12 +3,41 @@ logger = logging.getLogger(__name__)
 
 import asyncio
 from pyrogram import filters
-from pyrogram.errors import FloodWait
 from bot import channelforward
 from config import Config
 
-lock = asyncio.Lock()
-message_queue = []
+message_queue = asyncio.Queue()
+
+async def queue_processor(client):
+    while True:
+        try:
+            # Wait for the first message
+            message, to_channel = await message_queue.get()
+
+            # After receiving the first message, wait 6 seconds to collect other messages
+            await asyncio.sleep(6)
+
+            # Process the first message
+            try:
+                await message.copy(int(to_channel))
+                print("Forwarded a message to", to_channel)
+            except Exception as e:
+                logger.error(f"Failed to forward message: {e}")
+
+            # Process any other messages that have been queued up
+            while not message_queue.empty():
+                message, to_channel = await message_queue.get()
+                try:
+                    await message.copy(int(to_channel))
+                    print("Forwarded a message to", to_channel)
+                except Exception as e:
+                    logger.error(f"Failed to forward message: {e}")
+
+        except asyncio.CancelledError:
+            logger.info("Queue processor task cancelled.")
+            break
+        except Exception as e:
+            logger.exception(f"An error occurred in the queue processor: {e}")
 
 @channelforward.on_message(filters.channel)
 async def forward(client, message):
@@ -17,20 +46,7 @@ async def forward(client, message):
             from_channel, to_channel = id.split(":")
             if message.chat.id == int(from_channel):
                 if message.video or message.sticker:
-                    async with lock:
-                        message_queue.append((message, to_channel))
-                        if len(message_queue) == 1:
-                            while message_queue:
-                                msg, dest = message_queue[0]
-                                try:
-                                    await msg.copy(int(dest))
-                                    print("Forwarded in order from", from_channel, "to", dest)
-                                    message_queue.pop(0)
-                                    await asyncio.sleep(6)
-                                except FloodWait as e:
-                                    await asyncio.sleep(e.value * 1.2)
-                                    continue
-                                except Exception:
-                                    pass
+                    await message_queue.put((message, to_channel))
+                    print("Added a message to the queue from", from_channel)
     except Exception as e:
         logger.exception(e)
