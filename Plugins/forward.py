@@ -31,6 +31,7 @@ async def forward(client, message):
                                     await asyncio.sleep(e.value * 1.2)
                                     continue
                                 except Exception:
+                                    message_queue.pop(0)
                                     pass
     except Exception as e:
         logger.exception(e)
