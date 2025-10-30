@@ -1,4 +1,4 @@
-uvloop
+uvloop==0.21.0
 tgcrypto
 pyrogram~=2.0.59
 flask
