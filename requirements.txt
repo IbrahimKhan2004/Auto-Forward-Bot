@@ -4,3 +4,9 @@ pyrogram~=2.0.59
 flask
 gunicorn
 werkzeug
+# uvloop==0.21.0
+# tgcrypto==1.2.5
+# pyrogram~=2.0.59
+# flask==3.0.3
+# gunicorn==21.2.0
+# werkzeug==3.0.1
