@@ -23,7 +23,10 @@ async def forward(client, message):
                             while message_queue:
                                 msg, dest = message_queue[0]
                                 try:
-                                    await msg.copy(int(dest))
+                                    if msg.reply_markup:
+                                        await msg.copy(int(dest), reply_markup=msg.reply_markup)
+                                    else:
+                                        await msg.copy(int(dest))
                                     print("Forwarded in order from", from_channel, "to", dest)
                                     message_queue.pop(0)
                                     await asyncio.sleep(3)
