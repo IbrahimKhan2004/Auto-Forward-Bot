@@ -14,7 +14,10 @@ worker_busy = False
 
 async def worker():
     global worker_busy
-    print("Worker started")
+    print("Worker started, waiting for buffer...")
+    # Buffer delay to allow out-of-order messages to arrive
+    await asyncio.sleep(5)
+    print("Worker executing...")
 
     while message_queue:
         # Sort queue by message ID (first element of tuple)
